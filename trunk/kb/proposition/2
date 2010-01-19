@@ -1,0 +1,14 @@
+#BF
+b,c
+#BR
+f = b,d,e
+a = g,d
+a = c,f
+x = b
+e = d
+h = x,a
+d = c
+a = x,c
+d = x,b
+#F
+h
