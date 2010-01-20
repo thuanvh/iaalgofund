@@ -1,4 +1,4 @@
-package ia.reasoning;
+package ia.reasoning.firstordre;
 
 /**
  * Created by IntelliJ IDEA.

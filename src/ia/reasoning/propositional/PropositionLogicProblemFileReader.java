@@ -1,4 +1,4 @@
-package ia.reasoning;
+package ia.reasoning.propositional;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

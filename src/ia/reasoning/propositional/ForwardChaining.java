@@ -1,6 +1,5 @@
-package ia.reasoning;
+package ia.reasoning.propositional;
 
-import java.util.Arrays;
 import java.util.Vector;
 
 /**

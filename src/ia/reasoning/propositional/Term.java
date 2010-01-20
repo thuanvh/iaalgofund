@@ -1,4 +1,4 @@
-package ia.reasoning;
+package ia.reasoning.propositional;
 
 /**
  * Created by IntelliJ IDEA.
