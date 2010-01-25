@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_ia-tp-java" default="compile.module.ia-tp-java">
+  <dirname property="module.ia-tp-java.basedir" file="${ant.file.module_ia-tp-java}"/>
+  
+  <property name="module.jdk.home.ia-tp-java" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.ia-tp-java" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.ia-tp-java" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.ia-tp-java" value="${compiler.args}"/>
+  
+  <property name="ia-tp-java.output.dir" value="${module.ia-tp-java.basedir}/out/production/Ia-tp-java"/>
+  <property name="ia-tp-java.testoutput.dir" value="${module.ia-tp-java.basedir}/out/test/Ia-tp-java"/>
+  
+  <path id="ia-tp-java.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="ia-tp-java.module.classpath">
+    <path refid="${module.jdk.classpath.ia-tp-java}"/>
+  </path>
+  
+  <path id="ia-tp-java.runtime.module.classpath">
+    <pathelement location="${ia-tp-java.output.dir}"/>
+    <pathelement location="${ia-tp-java.testoutput.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.ia-tp-java">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.ia-tp-java">
+    <patternset refid="excluded.from.module.ia-tp-java"/>
+  </patternset>
+  
+  <path id="ia-tp-java.module.sourcepath">
+    <dirset dir="${module.ia-tp-java.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.ia-tp-java" depends="compile.module.ia-tp-java.production,compile.module.ia-tp-java.tests" description="Compile module Ia-tp-java"/>
+  
+  <target name="compile.module.ia-tp-java.production" description="Compile module Ia-tp-java; production classes">
+    <mkdir dir="${ia-tp-java.output.dir}"/>
+    <javac destdir="${ia-tp-java.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ia-tp-java}/javac">
+      <compilerarg line="${compiler.args.ia-tp-java}"/>
+      <bootclasspath refid="ia-tp-java.module.bootclasspath"/>
+      <classpath refid="ia-tp-java.module.classpath"/>
+      <src refid="ia-tp-java.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.ia-tp-java"/>
+    </javac>
+    
+    <copy todir="${ia-tp-java.output.dir}">
+      <fileset dir="${module.ia-tp-java.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.ia-tp-java.tests" depends="compile.module.ia-tp-java.production" description="compile module Ia-tp-java; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.ia-tp-java" description="cleanup module">
+    <delete dir="${ia-tp-java.output.dir}"/>
+    <delete dir="${ia-tp-java.testoutput.dir}"/>
+  </target>
+</project>
