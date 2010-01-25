@@ -97,7 +97,7 @@ public class BackwardChaining extends ChainingAlgo {
     public static void main(String args[]) {
         try {
             PropositionLogicProblem problem = PropositionLogicProblemFileReader.read("/home/thuan/sandbox/ia-tp-java/kb/proposition/2");
-            System.out.println(problem);
+//            System.out.println(problem);
             BackwardChaining bc = new BackwardChaining();
             bc.chaining(problem);
 

@@ -35,7 +35,7 @@ end
                 System.out.println(clause);
                 problem.getBR().remove(clause);
                 problem.addFact(clause.getConclusion());
-                System.out.println("BF");
+                System.out.println("BF:");
                 System.out.println(printVector(problem.getBF()));
                 if (isContain(problem.getBF(), problem.getF())) {
                     System.out.println("success");
@@ -96,7 +96,7 @@ end
     public static void main(String args[]) {
         try {
             PropositionLogicProblem problem = PropositionLogicProblemFileReader.read("/home/thuan/sandbox/ia-tp-java/kb/proposition/1");
-            System.out.println(problem);
+//            System.out.println(problem);
             ForwardChaining fc = new ForwardChaining();
             fc.chaining(problem);
 

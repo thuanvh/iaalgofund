@@ -1,0 +1,24 @@
+#Variable
+x,y
+
+#Predicate
+Parent,Child,Father,Mother,Male,Female
+
+#Constant
+John, Harley, Susan
+
+#BF
+Parent(John,Harley)
+Male(John)
+Mother(Susan,Harley)
+
+#BR
+Child(y,x) = Parent(x,y)
+Father(x,y) = Parent(x,y); Male(x)
+Mother(x,y) = Parent(x,y); Female(x)
+
+#F
+Father(John,Harley)
+Child(Harley,John)
+Female(Susan)
+Male(Harley,John)

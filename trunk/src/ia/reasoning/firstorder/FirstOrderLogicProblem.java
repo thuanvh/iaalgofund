@@ -1,4 +1,4 @@
-package ia.reasoning.firstordre;
+package ia.reasoning.firstorder;
 
 import java.util.Arrays;
 import java.util.Vector;
@@ -10,15 +10,79 @@ import java.util.Vector;
  * Time: 23:09:21
  * To change this template use File | Settings | File Templates.
  */
-public class PropositionLogicProblem {
+public class FirstOrderLogicProblem {
+    private Vector<Variable> variables;
+    private Vector<Constant> constants;
+    private Vector<Predicate> predicates;
     private Vector<Term> BF;
     private Vector<Clause> BR;
     private Vector<Term> F;
+    private Vector<Term> baseFactInitial; // Base fact initial
 
-    public PropositionLogicProblem() {
+    public FirstOrderLogicProblem() {
         BF = new Vector();
         BR = new Vector();
         F = new Vector();
+        variables = new Vector();
+        constants = new Vector();
+        predicates = new Vector();
+        baseFactInitial = new Vector();
+    }
+
+    public Vector<Term> getBaseFactInitial() {
+        return baseFactInitial;
+    }
+
+    public void setBaseFactInitial(Vector<Term> baseFactInitial) {
+        this.baseFactInitial = baseFactInitial;
+    }
+
+    public Vector<Predicate> getPredicates() {
+        return predicates;
+    }
+
+    public void setPredicates(Vector<Predicate> predicates) {
+        this.predicates = predicates;
+    }
+
+    public Predicate getPredicate(String name) {
+        for (int i = 0; i < this.predicates.size(); i++) {
+            if (this.predicates.get(i).name.compareTo(name) == 0)
+                return this.predicates.get(i);
+        }
+        return null;
+    }
+
+    public Variable getVariable(String name) {
+        for (int i = 0; i < this.variables.size(); i++) {
+            if (this.variables.get(i).name.compareTo(name) == 0)
+                return this.variables.get(i);
+        }
+        return null;
+    }
+
+    public Constant getConstant(String name) {
+        for (int i = 0; i < this.constants.size(); i++) {
+            if (this.constants.get(i).name.compareTo(name) == 0)
+                return this.constants.get(i);
+        }
+        return null;
+    }
+
+    public Vector<Constant> getConstants() {
+        return constants;
+    }
+
+    public void setConstants(Vector<Constant> constants) {
+        this.constants = constants;
+    }
+
+    public Vector<Variable> getVariables() {
+        return variables;
+    }
+
+    public void setVariables(Vector<Variable> variables) {
+        this.variables = variables;
     }
 
     private void sort(Vector<Term> vec) {
