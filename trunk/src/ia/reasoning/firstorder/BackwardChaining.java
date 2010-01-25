@@ -11,40 +11,48 @@ import java.util.Vector;
  */
 public class BackwardChaining extends ChainingAlgo {
 
-    private Vector answers;
+    //private Vector answers;
 
     public BackwardChaining() {
-        answers = new Vector();
+        //answers = new Vector();
     }
 
-    private Vector<Substitution> backChain(Term conclusion) {
+    private Vector<Result> backChain(Term conclusion) {
         Vector<Term> newVector = new Vector();
         newVector.add(conclusion);
-        Vector<Substitution> subs = backChainList(newVector, null);
+        Vector<Result> subs = backChainList(newVector, new Result());
         return subs;
 
     }
 
-    private Vector<Substitution> backChainList(Vector<Term> qlist, Substitution sub) {
+    private Vector<Result> backChainList(Vector<Term> qlist, Result result) {
 
-        Vector<Substitution> vector = new Vector();
+        Vector<Result> answers = new Vector();
         if (qlist.size() == 0) {
-            vector.add(sub);
-            return vector;
+            /*if(sub!=null){
+                answers.add(sub);
+            }
+            return answers;*/
+            return null;
         }
         Term q = qlist.get(0);
         System.out.println();
-        System.out.println("Chaining:"+q);
+        System.out.println("Chaining:" + q);
         for (int i = 0; i < problem.getBF().size(); i++) {
             Term term = problem.getBF().get(i);
             Substitution uni = unify(q, term);
             if (uni != null) {
                 System.out.println("Unify:" + q + "," + term + "=" + uni);
-                Substitution unisub = uni.compose(sub);
-                System.out.println(unisub);
-                answers.add(unisub);
+//                if (!uni.getReplacement().isEmpty()) {
+                    Substitution unisub = uni.compose(result.substitution);
+                    Result ret=new Result();
+                    ret.substitution=unisub;
+                    ret.term=term;
+                    ret.clause=result.clause;
+                    System.out.println(unisub);
+                    answers.add(ret);
+//                }
             }
-
         }
         for (int i = 0; i < problem.getBR().size(); i++) {
             Clause clause = problem.getBR().get(i);
@@ -54,17 +62,30 @@ public class BackwardChaining extends ChainingAlgo {
             if (uni != null) {
                 System.out.println("Unify:" + q + "," + clause.getConclusion() + "=" + uni);
                 Vector<Term> newProsposition = substitute(clause.getPropositions(), uni);
-                System.out.println("Proposition:"+printVector(newProsposition));                
-                Vector<Substitution> subs = backChainList(newProsposition, uni.compose(sub));
-                answers.addAll(subs);
+                System.out.println("Proposition:" + printVector(newProsposition));
+                Result ret=new Result();
+                ret.substitution=uni.compose(result.substitution);
+                ret.clause=clause;
+                Vector<Result> subs = backChainList(newProsposition, ret);
+                if (subs != null)
+                    answers.addAll(subs);
                 //return answers;
             }
         }
         qlist.remove(0);
-        Vector<Substitution> answersRest = backChainList(qlist,sub);
-        //sous set of answer
-        answers.addAll(answersRest);
-        return answers;
+        if(qlist.size()>0){
+            Vector<Result> answersRest = backChainList(qlist, result);
+                //sous set of answer
+            if (answersRest != null)
+                answers.addAll(answersRest);
+            else
+                return null;
+        }
+//        System.out.println(printVector(answers));
+        if(answers.size()>0)
+            return answers;
+        else
+            return null;
 
     }
 
@@ -73,13 +94,18 @@ public class BackwardChaining extends ChainingAlgo {
 
         //Node init=new Node();
         for (int i = 0; i < problem.getF().size(); i++) {
-            this.answers.clear();
+            //this.answers.clear();
             Term theory = problem.getF().get(i);
-            System.out.println("Prove:"+theory);
-            problem.setBF((Vector<Term>)problem.getBaseFactInitial().clone());
-            Vector<Substitution> subs = backChain(theory);
+            System.out.println("Prove:" + theory);
+            problem.setBF((Vector<Term>) problem.getBaseFactInitial().clone());
+            Vector<Result> subs = backChain(theory);
             System.out.println();
-            System.out.println(printVector(subs));
+            if (subs != null && subs.size() > 0) {
+                System.out.println("Success.");
+                System.out.println(printVector(subs));
+            } else
+                System.out.println("Fail");
+
             System.out.println("====");
         }
         //init.setTerm(theory);
@@ -163,20 +189,32 @@ public class BackwardChaining extends ChainingAlgo {
 
     public static void main(String args[]) {
         try {
-            FirstOrderLogicProblem problem = FirstOrderLogicProblemFileReader.read("/home/thuan/sandbox/ia-tp-java/kb/firstorder/1");
-//            System.out.println(problem);
-            BackwardChaining bc = new BackwardChaining();
-            bc.setProblem(problem);
-            bc.chaining();
+            if (args.length >= 1) {
+                FirstOrderLogicProblem problem = FirstOrderLogicProblemFileReader.read(args[0]);
+//            FirstOrderLogicProblem problem = FirstOrderLogicProblemFileReader.read("/home/thuan/sandbox/ia-tp-java/kb/firstorder/1");
 
+//            System.out.println(problem);
+                BackwardChaining bc = new BackwardChaining();
+                bc.setProblem(problem);
+                bc.chaining();
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-    /*private class Node{
+    private class Result{
         private Clause clause;
         private Term term;
-        private Node parent;
+        private Substitution substitution;
+
+        public Substitution getSubstitution() {
+            return substitution;
+        }
+
+        public void setSubstitution(Substitution substitution) {
+            this.substitution = substitution;
+        }
+
         public Clause getClause() {
             return clause;
         }
@@ -192,5 +230,18 @@ public class BackwardChaining extends ChainingAlgo {
         public void setTerm(Term term) {
             this.term = term;
         }
-    }*/
+
+        @Override
+        public String toString() {
+            String a="\nSub:"+substitution;
+            if(clause!=null){
+                a+=" - Clause:"+clause;
+            }
+            if(term!=null){
+                a+=" - Term:"+term;
+            }
+//            a+="\n";
+            return a;
+        }
+    }
 }

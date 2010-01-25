@@ -10,21 +10,7 @@ import java.util.Vector;
  * To change this template use File | Settings | File Templates.
  */
 public class ForwardChaining extends ChainingAlgo {
-    /*
-procedure FORWARD-CHAIN'S, p)
-if there is a sentence in KB that is a renaming of p then return
-Add p to KB
-for each (p\ A . . . A p,, => q) in KB such that for some i, UNIFY(P,,/?) = 0 succeeds do
-FlND-AND-lNFER(A"B, [p\, ... ,p-,-\,pM,. .. ,p,,],q,9)
-end
-procedure FIND-AND-lNFER'fi, premises, conclusion, 0)
-if premises = [ \ then
-FORWARD-CHAIN'S, SuBST(0, conclusion))
-else for each/;' in KB such that UNlFY(p', SUBST(0, FlRST( premises))) = #2 do
-FlND-AND-lNFER(/fS, REST(premises), conclusion, COMPOSE^, #2))
-end
-    
-     */
+
 
     @Override
     public void chaining(PropositionLogicProblem problem) {
@@ -48,7 +34,6 @@ end
         }
     }
 
-    
 
     private boolean isContain(Vector<Term> a, Term t) {
         int index = 0;
@@ -65,7 +50,7 @@ end
                 min = mid + 1;
             }
         }
-        if(min>=a.size() || max<0)
+        if (min >= a.size() || max < 0)
             return false;
         if (a.get(min).compareTo(t) == 0)
             return true;
@@ -78,7 +63,7 @@ end
             return false;
 
         for (int i = 0; i < b.size(); i++) {
-            if(!isContain(a,b.get(i)))
+            if (!isContain(a, b.get(i)))
                 return false;
         }
         return true;
@@ -95,11 +80,13 @@ end
 
     public static void main(String args[]) {
         try {
-            PropositionLogicProblem problem = PropositionLogicProblemFileReader.read("/home/thuan/sandbox/ia-tp-java/kb/proposition/1");
+//            System.out.println(args.length);
+            if (args.length >= 1) {
+                PropositionLogicProblem problem = PropositionLogicProblemFileReader.read(args[0]);
 //            System.out.println(problem);
-            ForwardChaining fc = new ForwardChaining();
-            fc.chaining(problem);
-
+                ForwardChaining fc = new ForwardChaining();
+                fc.chaining(problem);
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

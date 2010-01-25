@@ -176,8 +176,8 @@ public class ForwardChaining extends ChainingAlgo {
 
     public static void main(String args[]) {
         try {
-            if(args.length>1){
-                FirstOrderLogicProblem problem = FirstOrderLogicProblemFileReader.read(args[1]);
+            if(args.length>=1){
+                FirstOrderLogicProblem problem = FirstOrderLogicProblemFileReader.read(args[0]);
 //                FirstOrderLogicProblem problem = FirstOrderLogicProblemFileReader.read("/home/thuan/sandbox/ia-tp-java/kb/firstorder/3");
     //            System.out.println(problem);
                 ForwardChaining fc = new ForwardChaining();

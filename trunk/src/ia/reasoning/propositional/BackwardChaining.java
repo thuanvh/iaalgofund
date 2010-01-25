@@ -96,10 +96,12 @@ public class BackwardChaining extends ChainingAlgo {
     }
     public static void main(String args[]) {
         try {
-            PropositionLogicProblem problem = PropositionLogicProblemFileReader.read("/home/thuan/sandbox/ia-tp-java/kb/proposition/2");
+            if(args.length>=1){
+            PropositionLogicProblem problem = PropositionLogicProblemFileReader.read(args[0]);
 //            System.out.println(problem);
             BackwardChaining bc = new BackwardChaining();
             bc.chaining(problem);
+            }
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
