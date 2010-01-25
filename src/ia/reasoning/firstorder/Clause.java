@@ -1,4 +1,4 @@
-package ia.reasoning.firstordre;
+package ia.reasoning.firstorder;
 
 import java.util.Vector;
 
