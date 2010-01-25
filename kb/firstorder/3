@@ -23,5 +23,6 @@ Sister(x,y) = Parent(z,x); Parent(z,y); Female(x);
 
 #F
 Child(Harley,John)
+Brother(Harley,Mary)
 Female(Susan)
-Male(Harley,John)
+Male(Harley)

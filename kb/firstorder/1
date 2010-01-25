@@ -20,5 +20,6 @@ Mother(x,y) = Parent(x,y); Female(x)
 #F
 Father(John,Harley)
 Child(Harley,John)
+Mother(John)
 Female(Susan)
 Male(Harley,John)

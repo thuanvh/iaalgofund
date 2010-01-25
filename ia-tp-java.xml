@@ -81,90 +81,11 @@
   <property name="project.jdk.classpath" value="jdk.classpath.1.6"/>
   
   
-  <!-- Project Libraries -->
-  
-  <path id="library.jexl.classpath">
-    <pathelement location="/home/thuan/sandbox/commons-jexl-1.1/commons-jexl-1.1.jar"/>
-    <pathelement location="${basedir}/lib/commons-jexl-1.1.jar"/>
-  </path>
-  
-  
   <!-- Application Server Libraries -->
   
   <!-- Modules -->
   
-  
-  <!-- Module ia-tp-java -->
-  
-  <dirname property="module.ia-tp-java.basedir" file="${ant.file}"/>
-  
-  
-  <property name="module.jdk.home.ia-tp-java" value="${project.jdk.home}"/>
-  <property name="module.jdk.bin.ia-tp-java" value="${project.jdk.bin}"/>
-  <property name="module.jdk.classpath.ia-tp-java" value="${project.jdk.classpath}"/>
-  
-  <property name="compiler.args.ia-tp-java" value="${compiler.args}"/>
-  
-  <property name="ia-tp-java.output.dir" value="${module.ia-tp-java.basedir}/out/production/ia-tp-java"/>
-  <property name="ia-tp-java.testoutput.dir" value="${module.ia-tp-java.basedir}/out/test/ia-tp-java"/>
-  
-  <path id="ia-tp-java.module.bootclasspath">
-    <!-- Paths to be included in compilation bootclasspath -->
-  </path>
-  
-  <path id="ia-tp-java.module.classpath">
-    <path refid="${module.jdk.classpath.ia-tp-java}"/>
-    <path refid="library.jexl.classpath"/>
-  </path>
-  
-  <path id="ia-tp-java.runtime.module.classpath">
-    <pathelement location="${ia-tp-java.output.dir}"/>
-    <pathelement location="${ia-tp-java.testoutput.dir}"/>
-    <path refid="library.jexl.classpath"/>
-  </path>
-  
-  
-  <patternset id="excluded.from.module.ia-tp-java">
-    <patternset refid="ignored.files"/>
-  </patternset>
-  
-  <patternset id="excluded.from.compilation.ia-tp-java">
-    <patternset refid="excluded.from.module.ia-tp-java"/>
-  </patternset>
-  
-  <path id="ia-tp-java.module.sourcepath">
-    <dirset dir="${module.ia-tp-java.basedir}">
-      <include name="src"/>
-    </dirset>
-  </path>
-  
-  
-  <target name="compile.module.ia-tp-java" depends="compile.module.ia-tp-java.production,compile.module.ia-tp-java.tests" description="Compile module ia-tp-java"/>
-  
-  <target name="compile.module.ia-tp-java.production" description="Compile module ia-tp-java; production classes">
-    <mkdir dir="${ia-tp-java.output.dir}"/>
-    <javac destdir="${ia-tp-java.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ia-tp-java}/javac">
-      <compilerarg line="${compiler.args.ia-tp-java}"/>
-      <bootclasspath refid="ia-tp-java.module.bootclasspath"/>
-      <classpath refid="ia-tp-java.module.classpath"/>
-      <src refid="ia-tp-java.module.sourcepath"/>
-      <patternset refid="excluded.from.compilation.ia-tp-java"/>
-    </javac>
-    
-    <copy todir="${ia-tp-java.output.dir}">
-      <fileset dir="${module.ia-tp-java.basedir}/src">
-        <patternset refid="compiler.resources"/>
-        <type type="file"/>
-      </fileset>
-    </copy>
-  </target>
-  
-  <target name="compile.module.ia-tp-java.tests" depends="compile.module.ia-tp-java.production" description="compile module ia-tp-java; test classes" unless="skip.tests"/>
-  
-  <target name="clean.module.ia-tp-java" description="cleanup module">
-    <delete dir="${ia-tp-java.output.dir}"/>
-    <delete dir="${ia-tp-java.testoutput.dir}"/>
-  </target>
+  <import file="${basedir}/module_ia-tp-java.xml"/>
   
   <target name="init" description="Build initialization">
     <!-- Perform any build initialization in this target -->
@@ -174,5 +95,32 @@
   
   <target name="build.modules" depends="init, clean, compile.module.ia-tp-java" description="build all modules"/>
   
-  <target name="all" depends="build.modules" description="build all"/>
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.ia_tp" value="${basedir}/bin"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.ia_tp.jar" value="${artifacts.temp.dir}/ia_tp.jar"/>
+  </target>
+  
+  <target name="artifact.ia_tp" depends="init.artifacts, compile.module.ia-tp-java" description="Build &apos;ia_tp&apos; artifact">
+    <property name="artifact.temp.output.ia_tp" value="${artifacts.temp.dir}/ia_tp"/>
+    <mkdir dir="${artifact.temp.output.ia_tp}"/>
+    <jar destfile="${temp.jar.path.ia_tp.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${ia-tp-java.output.dir}"/>
+      <zipfileset file="${basedir}/META-INF/MANIFEST.MF" prefix="META-INF"/>
+    </jar>
+    <copy file="${temp.jar.path.ia_tp.jar}" tofile="${artifact.temp.output.ia_tp}/ia_tp.jar"/>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.ia_tp" description="Build all artifacts">
+    <mkdir dir="${artifact.output.ia_tp}"/>
+    <copy todir="${artifact.output.ia_tp}">
+      <fileset dir="${artifact.temp.output.ia_tp}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
 </project>
